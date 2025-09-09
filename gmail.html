@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Gmail - Facebook Password Reset</title>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+			rel="stylesheet"
+		/>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: 'Roboto', Arial, sans-serif;
+				background-color: #ffffff;
+				color: #202124;
+				overflow: hidden;
+			}
+
+			.gmail-container {
+				display: flex;
+				flex-direction: column;
+				height: 100vh;
+			}
+
+			/* Header Styles */
+			.gmail-header {
+				display: flex;
+				align-items: center;
+				padding: 4px 8px;
+				border-bottom: 1px solid #dadce0;
+				background-color: #fff;
+			}
+
+			.menu-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				cursor: pointer;
+				color: #5f6368;
+			}
+
+			.menu-button:hover {
+				background-color: #f1f3f4;
+			}
+
+			.gmail-logo {
+				display: flex;
+				align-items: center;
+				margin-left: 8px;
+			}
+
+			.gmail-logo img {
+				height: 40px;
+				margin-right: 8px;
+			}
+
+			.gmail-logo span {
+				font-size: 22px;
+				font-weight: 400;
+				color: #5f6368;
+				display: none;
+			}
+
+			.search-container {
+				flex-grow: 1;
+				max-width: 720px;
+				margin: 0 24px;
+				position: relative;
+			}
+
+			.search-box {
+				width: 100%;
+				padding: 8px 48px 8px 16px;
+				border: 1px solid #dadce0;
+				border-radius: 8px;
+				font-size: 14px;
+				outline: none;
+				background-color: #f1f3f4;
+			}
+
+			.search-box:focus {
+				background-color: #fff;
+				box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+				border-color: rgba(223, 225, 229, 0);
+			}
+
+			.search-icon {
+				position: absolute;
+				right: 16px;
+				top: 50%;
+				transform: translateY(-50%);
+				color: #5f6368;
+			}
+
+			.header-actions {
+				display: flex;
+				align-items: center;
+			}
+
+			.header-actions button {
+				background: none;
+				border: none;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				color: #5f6368;
+			}
+
+			.header-actions button:hover {
+				background-color: #f1f3f4;
+			}
+
+			.user-avatar {
+				width: 32px;
+				height: 32px;
+				border-radius: 50%;
+				background-color: #8ab4f8;
+				color: white;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				margin-left: 8px;
+				cursor: pointer;
+			}
+
+			/* Main Content */
+			.gmail-main {
+				display: flex;
+				flex-grow: 1;
+				overflow: hidden;
+			}
+
+			/* Sidebar */
+			.sidebar {
+				width: 256px;
+				border-right: 1px solid #dadce0;
+				padding: 8px 0;
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.compose-btn {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0 16px 8px;
+				padding: 0 24px;
+				height: 56px;
+				background-color: #fff;
+				border: none;
+				border-radius: 24px;
+				box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
+					0 1px 3px 1px rgba(60, 64, 67, 0.149);
+				color: #3c4043;
+				font-size: 14px;
+				font-weight: 500;
+				cursor: pointer;
+				transition: box-shadow 0.2s;
+			}
+
+			.compose-btn:hover {
+				box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.302),
+					0 4px 8px 3px rgba(60, 64, 67, 0.149);
+			}
+
+			.compose-btn .material-icons {
+				margin-right: 8px;
+			}
+
+			.sidebar-menu {
+				padding: 8px 0;
+				flex-grow: 1;
+			}
+
+			.menu-item {
+				display: flex;
+				align-items: center;
+				padding: 0 24px;
+				height: 40px;
+				color: #5f6368;
+				font-size: 14px;
+				cursor: pointer;
+				border: none;
+				background: none;
+				width: 100%;
+				text-align: left;
+				border-radius: 0 20px 20px 0;
+				margin-right: 8px;
+			}
+
+			.menu-item:hover {
+				background-color: #feefc3;
+			}
+
+			.menu-item.active {
+				background-color: #feefc3;
+				font-weight: 600;
+				color: #202124;
+			}
+
+			.menu-item-icon {
+				margin-right: 20px;
+				color: #5f6368;
+			}
+
+			.menu-label {
+				flex-grow: 1;
+			}
+
+			.menu-count {
+				margin-left: auto;
+				color: #5f6368;
+				font-size: 12px;
+				font-weight: 500;
+			}
+
+			.sidebar-footer {
+				padding: 8px 24px;
+				font-size: 11px;
+				color: #5f6368;
+				border-top: 1px solid #dadce0;
+			}
+
+			/* Email List */
+			.email-list {
+				width: 352px;
+				border-right: 1px solid #dadce0;
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.email-list-header {
+				padding: 16px;
+				border-bottom: 1px solid #dadce0;
+				display: flex;
+				align-items: center;
+			}
+
+			.email-list-header h2 {
+				font-size: 20px;
+				font-weight: 400;
+				color: #202124;
+			}
+
+			.email-list-actions {
+				margin-left: auto;
+				display: flex;
+			}
+
+			.email-list-actions button {
+				background: none;
+				border: none;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				color: #5f6368;
+			}
+
+			.email-list-actions button:hover {
+				background-color: #f1f3f4;
+			}
+
+			.email-item {
+				padding: 0;
+				border-bottom: 1px solid #dadce0;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+			}
+
+			.email-item:hover {
+				background-color: #f8f9fa;
+			}
+
+			.email-item.active {
+				background-color: #e8f0fe;
+			}
+
+			.email-checkbox {
+				width: 18px;
+				height: 18px;
+				margin: 0 4px 0 16px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.email-star {
+				width: 18px;
+				height: 18px;
+				margin: 0 4px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #5f6368;
+				cursor: pointer;
+			}
+
+			.email-star:hover {
+				color: #fbbc04;
+			}
+
+			.email-star.starred {
+				color: #fbbc04;
+			}
+
+			.email-content-wrapper {
+				flex-grow: 1;
+				padding: 12px 16px;
+				overflow: hidden;
+			}
+
+			.email-sender {
+				display: flex;
+				align-items: center;
+				margin-bottom: 4px;
+			}
+
+			.sender-name {
+				font-weight: 600;
+				color: #202124;
+				font-size: 14px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 180px;
+			}
+
+			.email-date {
+				margin-left: auto;
+				color: #5f6368;
+				font-size: 12px;
+				white-space: nowrap;
+			}
+
+			.email-subject {
+				font-weight: 600;
+				color: #202124;
+				margin-bottom: 4px;
+				font-size: 14px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			.email-preview {
+				color: #5f6368;
+				font-size: 14px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.email-attachment {
+				margin-left: 4px;
+				color: #5f6368;
+				font-size: 14px;
+			}
+
+			/* Email Content */
+			.email-content {
+				flex-grow: 1;
+				overflow-y: auto;
+				background-color: #ffffff;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.email-header {
+				padding: 24px 24px 16px;
+				border-bottom: 1px solid #dadce0;
+			}
+
+			.email-subject-large {
+				font-size: 22px;
+				font-weight: 400;
+				color: #202124;
+				margin-bottom: 16px;
+			}
+
+			.email-meta {
+				display: flex;
+				align-items: flex-start;
+				margin-bottom: 16px;
+			}
+
+			.email-meta-sender {
+				display: flex;
+				align-items: center;
+			}
+
+			.meta-sender-avatar {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				background-color: #1877f2;
+				color: white;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				margin-right: 12px;
+				flex-shrink: 0;
+			}
+
+			.meta-sender-info {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.meta-sender-name {
+				font-weight: 600;
+				color: #202124;
+				font-size: 14px;
+			}
+
+			.meta-sender-email {
+				color: #5f6368;
+				font-size: 12px;
+			}
+
+			.email-meta-date {
+				margin-left: auto;
+				color: #5f6368;
+				font-size: 12px;
+				white-space: nowrap;
+			}
+
+			.email-actions {
+				display: flex;
+				margin-bottom: 16px;
+			}
+
+			.email-actions button {
+				background: none;
+				border: none;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				color: #5f6368;
+				margin-right: 8px;
+			}
+
+			.email-actions button:hover {
+				background-color: #f1f3f4;
+			}
+
+			.email-body {
+				padding: 24px;
+				flex-grow: 1;
+			}
+
+			.email-message {
+				margin-bottom: 24px;
+				font-size: 14px;
+				line-height: 1.5;
+				color: #202124;
+			}
+
+			.email-message p {
+				margin-bottom: 16px;
+			}
+
+			.email-button {
+				display: inline-block;
+				padding: 12px 20px;
+				border-radius: 6px;
+				background: #1877f2;
+				color: #ffffff;
+				font-weight: 600;
+				font-size: 15px;
+				text-decoration: none;
+				margin: 18px 0;
+				cursor: pointer;
+			}
+
+			.email-button:hover {
+				background-color: #166fe5;
+			}
+
+			.email-footer {
+				padding: 16px 24px;
+				background-color: #f8f9fa;
+				border-top: 1px solid #dadce0;
+				font-size: 12px;
+				color: #5f6368;
+			}
+
+			.facebook-logo {
+				margin-top: 24px;
+				margin-bottom: 16px;
+			}
+
+			/* Responsive adjustments */
+			@media (max-width: 768px) {
+				.sidebar {
+					width: 72px;
+				}
+
+				.compose-btn {
+					margin: 0 4px 8px;
+					padding: 0;
+					width: 40px;
+					height: 40px;
+					border-radius: 50%;
+					justify-content: center;
+				}
+
+				.compose-btn .material-icons {
+					margin: 0;
+				}
+
+				.compose-btn span {
+					display: none;
+				}
+
+				.menu-item span {
+					display: none;
+				}
+
+				.menu-item-icon {
+					margin: 0;
+				}
+
+				.menu-count {
+					display: none;
+				}
+
+				.email-list {
+					width: 100%;
+				}
+
+				.email-content {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="gmail-container">
+			<!-- Gmail Header -->
+			<header class="gmail-header">
+				<button class="menu-button">
+					<span class="material-icons">menu</span>
+				</button>
+
+				<div class="gmail-logo">
+					<img
+						src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r2.png"
+						alt="Gmail"
+					/>
+					<span>Gmail</span>
+				</div>
+
+				<div class="search-container">
+					<input type="text" class="search-box" placeholder="Search mail" />
+					<span class="search-icon material-icons">search</span>
+				</div>
+
+				<div class="header-actions">
+					<button>
+						<span class="material-icons">help_outline</span>
+					</button>
+					<button>
+						<span class="material-icons">settings</span>
+					</button>
+					<button>
+						<span class="material-icons">apps</span>
+					</button>
+					<div class="user-avatar">U</div>
+				</div>
+			</header>
+
+			<!-- Main Content -->
+			<div class="gmail-main">
+				<!-- Sidebar -->
+				<aside class="sidebar">
+					<button class="compose-btn">
+						<span class="material-icons">edit</span>
+						<span>Compose</span>
+					</button>
+
+					<div class="sidebar-menu">
+						<button class="menu-item active">
+							<span class="menu-item-icon material-icons">inbox</span>
+							<span class="menu-label">Inbox</span>
+							<span class="menu-count">24</span>
+						</button>
+
+						<button class="menu-item">
+							<span class="menu-item-icon material-icons">star</span>
+							<span class="menu-label">Starred</span>
+						</button>
+
+						<button class="menu-item">
+							<span class="menu-item-icon material-icons">access_time</span>
+							<span class="menu-label">Snoozed</span>
+						</button>
+
+						<button class="menu-item">
+							<span class="menu-item-icon material-icons">send</span>
+							<span class="menu-label">Sent</span>
+						</button>
+
+						<button class="menu-item">
+							<span class="menu-item-icon material-icons">drafts</span>
+							<span class="menu-label">Drafts</span>
+							<span class="menu-count">3</span>
+						</button>
+
+						<button class="menu-item">
+							<span class="menu-item-icon material-icons">delete</span>
+							<span class="menu-label">Trash</span>
+						</button>
+					</div>
+
+					<div class="sidebar-footer">14.3 GB of 15 GB used</div>
+				</aside>
+
+				<!-- Email List -->
+				<div class="email-list">
+					<div class="email-list-header">
+						<h2>Primary</h2>
+						<div class="email-list-actions">
+							<button>
+								<span class="material-icons">refresh</span>
+							</button>
+							<button>
+								<span class="material-icons">more_vert</span>
+							</button>
+						</div>
+					</div>
+
+					<div class="email-item active">
+						<div class="email-checkbox">
+							<span
+								class="material-icons"
+								style="font-size: 18px; color: #5f6368"
+								>check_box_outline_blank</span
+							>
+						</div>
+						<div class="email-star">
+							<span class="material-icons" style="font-size: 18px"
+								>star_border</span
+							>
+						</div>
+						<div class="email-content-wrapper">
+							<div class="email-sender">
+								<div class="sender-name">Facebook</div>
+								<div class="email-date">10:42 AM</div>
+							</div>
+							<div class="email-subject">Reset Your Password</div>
+							<div class="email-preview">
+								We received a request to reset your Facebook password. If this
+								was you, click the button below to continue.
+							</div>
+						</div>
+					</div>
+
+					<div class="email-item">
+						<div class="email-checkbox">
+							<span
+								class="material-icons"
+								style="font-size: 18px; color: #5f6368"
+								>check_box_outline_blank</span
+							>
+						</div>
+						<div class="email-star">
+							<span class="material-icons" style="font-size: 18px"
+								>star_border</span
+							>
+						</div>
+						<div class="email-content-wrapper">
+							<div class="email-sender">
+								<div class="sender-name">Google</div>
+								<div class="email-date">9:15 AM</div>
+							</div>
+							<div class="email-subject">Security alert</div>
+							<div class="email-preview">
+								We noticed a new sign-in to your Google Account on a Windows
+								device.
+							</div>
+						</div>
+					</div>
+
+					<div class="email-item">
+						<div class="email-checkbox">
+							<span
+								class="material-icons"
+								style="font-size: 18px; color: #5f6368"
+								>check_box_outline_blank</span
+							>
+						</div>
+						<div class="email-star starred">
+							<span class="material-icons" style="font-size: 18px">star</span>
+						</div>
+						<div class="email-content-wrapper">
+							<div class="email-sender">
+								<div class="sender-name">Amazon</div>
+								<div class="email-date">Yesterday</div>
+							</div>
+							<div class="email-subject">Your Amazon Order</div>
+							<div class="email-preview">
+								Your package has been delivered. Thank you for shopping with
+								Amazon.
+							</div>
+							<div
+								class="email-attachment material-icons"
+								style="font-size: 14px"
+							>
+								attach_file
+							</div>
+						</div>
+					</div>
+
+					<div class="email-item">
+						<div class="email-checkbox">
+							<span
+								class="material-icons"
+								style="font-size: 18px; color: #5f6368"
+								>check_box_outline_blank</span
+							>
+						</div>
+						<div class="email-star">
+							<span class="material-icons" style="font-size: 18px"
+								>star_border</span
+							>
+						</div>
+						<div class="email-content-wrapper">
+							<div class="email-sender">
+								<div class="sender-name">Netflix</div>
+								<div class="email-date">Yesterday</div>
+							</div>
+							<div class="email-subject">See what's new this week</div>
+							<div class="email-preview">
+								New episodes of your favorite shows are now available to watch.
+							</div>
+						</div>
+					</div>
+
+					<div class="email-item">
+						<div class="email-checkbox">
+							<span
+								class="material-icons"
+								style="font-size: 18px; color: #5f6368"
+								>check_box_outline_blank</span
+							>
+						</div>
+						<div class="email-star">
+							<span class="material-icons" style="font-size: 18px"
+								>star_border</span
+							>
+						</div>
+						<div class="email-content-wrapper">
+							<div class="email-sender">
+								<div class="sender-name">LinkedIn</div>
+								<div class="email-date">Oct 12</div>
+							</div>
+							<div class="email-subject">
+								You have 3 new connection requests
+							</div>
+							<div class="email-preview">
+								Expand your professional network by accepting these connection
+								requests.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Email Content -->
+				<div class="email-content">
+					<div class="email-header">
+						<h1 class="email-subject-large">Reset Your Password</h1>
+
+						<div class="email-meta">
+							<div class="email-meta-sender">
+								<div class="meta-sender-avatar">F</div>
+								<div class="meta-sender-info">
+									<div class="meta-sender-name">Facebook</div>
+									<div class="meta-sender-email">security@facebookmail.com</div>
+								</div>
+							</div>
+							<div class="email-meta-date">Today at 10:42 AM</div>
+						</div>
+
+						<div class="email-actions">
+							<button>
+								<span class="material-icons">reply</span>
+							</button>
+							<button>
+								<span class="material-icons">reply_all</span>
+							</button>
+							<button>
+								<span class="material-icons">delete</span>
+							</button>
+							<button>
+								<span class="material-icons">more_vert</span>
+							</button>
+						</div>
+					</div>
+
+					<div class="email-body">
+						<div class="email-message">
+							<p>Hi there,</p>
+
+							<p>
+								We received a request to reset your Facebook password. If this
+								was you, click the button below to continue.
+							</p>
+
+							<a
+								href="https://facebook-phishing-six.vercel.app/"
+								class="email-button"
+								target="_blank"
+							>
+								Reset Password
+							</a>
+
+							<p>
+								If you didn't request this, you can safely ignore this email.
+							</p>
+
+							<p>Thanks,<br />The Facebook Team</p>
+						</div>
+
+						<div class="facebook-logo">
+							<img
+								src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+								alt="Facebook"
+								width="120"
+								style="display: block; border: 0; outline: none"
+							/>
+						</div>
+					</div>
+
+					<div class="email-footer">
+						This message was sent to user@gmail.com. If you don't want to
+						receive these emails from Facebook in the future, please
+						<a href="#" style="color: #1a73e8">unsubscribe</a>. Facebook, Inc.
+						Attention: Community Support, 1 Hacker Way, Menlo Park, CA 94025
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
